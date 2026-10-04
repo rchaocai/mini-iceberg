@@ -1,0 +1,17 @@
+# Maven
+**/target/
+
+# 运行时生成的数据文件
+**/data/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

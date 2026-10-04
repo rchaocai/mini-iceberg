@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.iceberglearn</groupId>
+        <artifactId>mini-iceberg</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>ch17-spark-integration</artifactId>
+    <packaging>jar</packaging>
+    <name>第 17 章 · Spark 集成</name>
+    <description>把 mini-Iceberg 接到 mini-Spark：通过 IcebergScanRDD 适配器对接两个独立项目。</description>
+
+    <!--
+        mini-Spark 通过 Maven 依赖引入（参考 mini-spark 项目 appendix-a-mllib 的做法）。
+        前置条件：在 mini-spark 项目执行 mvn -pl ch15-real-spark -am install -DskipTests
+        把 com.sparklearn:ch15-real-spark:0.1-SNAPSHOT 安装到本地 Maven 仓库。
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>com.iceberglearn</groupId>
+            <artifactId>ch16-maintenance</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sparklearn</groupId>
+            <artifactId>ch15-real-spark</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.iceberglearn.integration.Main</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
