@@ -1,6 +1,17 @@
 # mini-iceberg
 
-用 **Java 17 从零手写一个 mini-Iceberg**，在亲手实现中理解开放表格式（open table format）的内核：元数据分层、快照与 ACID、隐藏分区、分区与模式演进、时间旅行、Scan 与写入路径、表维护，直至把 mini-Iceberg 接到 mini-Spark。不需要预先懂 Scala 或分布式——会基础 Java 就够了。
+用 Java 17 从零实现的开放表格式（open table format），对照 Apache Iceberg（tag `apache-iceberg-1.10.2`）与 `format/spec.md` 逐层构建。实现聚焦三个问题：一张表由哪些文件构成，一次写入如何变成原子操作，一次查询如何在元数据上完成文件裁剪。
+
+覆盖表格式的完整主线：
+
+- **元数据分层**：metadata → snapshot → manifest-list → manifest → data-file
+- **ACID**：快照隔离、原子提交、乐观并发与冲突重试
+- **隐藏分区**：identity / bucket / truncate / day 变换，数据跳过与谓词投影
+- **演进能力**：Schema 演进、分区演进、时间旅行
+- **读写路径**：Scan Planning、Overwrite / Delete / Row Delta、表维护
+- **引擎集成**：适配器把 mini-Iceberg 接入 mini-Spark，打通存储格式与计算引擎
+
+类名、数据结构与方法职责与 Iceberg 源码保持一致，去掉配置层、异常处理与性能优化等工业级细节，便于从教学版迁移到真实 `core/` 模块。
 
 ## 模块速览
 
@@ -34,7 +45,7 @@ mvn -q -pl ch15-real-spark -am install -DskipTests
 
 ## 代码组织
 
-每个模块是一个独立的 Maven 子模块——打开任一 `chNN-*` 目录，就是该模块的完整可运行代码，模块之间没有横向依赖，可以独立编译和运行。
+每个模块是一个独立的 Maven 子模块，包含该章的完整可运行代码。模块之间没有横向依赖，可独立编译、独立运行。
 
 - `com.iceberglearn` — 各章实现（元数据、manifest、Catalog、Scan、写入、维护等）
 - `com.iceberglearn.integration` — 第 17 章的 mini-Spark 适配器
