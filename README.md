@@ -1,6 +1,6 @@
 # mini-iceberg
 
-用 Java 17 从零实现的开放表格式（open table format），对照 Apache Iceberg（tag `apache-iceberg-1.10.2`）与 `format/spec.md` 逐层构建。实现聚焦三个问题：一张表由哪些文件构成，一次写入如何变成原子操作，一次查询如何在元数据上完成文件裁剪。
+用 Java 17 从零实现的开放表格式（open table format），一份可运行的最小表格式内核。实现聚焦三个问题：一张表由哪些文件构成，一次写入如何变成原子操作，一次查询如何在元数据上完成文件裁剪。
 
 覆盖表格式的完整主线：
 
@@ -11,7 +11,7 @@
 - **读写路径**：Scan Planning、Overwrite / Delete / Row Delta、表维护
 - **引擎集成**：适配器把 mini-Iceberg 接入 mini-Spark，打通存储格式与计算引擎
 
-类名、数据结构与方法职责与 Iceberg 源码保持一致，去掉配置层、异常处理与性能优化等工业级细节，便于从教学版迁移到真实 `core/` 模块。
+整个实现保持精简，每个机制对应一个独立模块，便于按模块阅读、编译和运行。
 
 ## 模块速览
 
@@ -23,7 +23,7 @@
 | 第二部分 · 快照与并发 | Ch5-8 | 快照隔离、原子提交、时间旅行、乐观并发与冲突 |
 | 第三部分 · 隐藏分区 | Ch9-12 | 隐藏分区、数据跳过、谓词投影、分区演进 |
 | 第四部分 · 查询与写入 | Ch13-15 | Schema 演进、Scan Planning、高级写入 |
-| 第五部分 · 维护与集成 | Ch16-18 | 表维护、接入 mini-Spark、对照真实 Apache Iceberg |
+| 第五部分 · 维护与集成 | Ch16-18 | 表维护、接入 mini-Spark、表格式实现复盘 |
 | 附录 | B | 从行到列：分析型数据格式 |
 
 ## 构建
@@ -51,11 +51,6 @@ mvn -q -pl ch15-real-spark -am install -DskipTests
 - `com.iceberglearn.integration` — 第 17 章的 mini-Spark 适配器
 
 运行时生成的数据文件落在模块的 `data/` 目录下，已在 `.gitignore` 中忽略。
-
-## 参考工程
-
-- [Apache Iceberg](https://github.com/apache/iceberg) — 对照源码（tag: `apache-iceberg-1.10.2`）
-- [mini-Spark](https://github.com/rchaocai/mini-spark) — 第 17 章联动项目
 
 ## 许可
 
